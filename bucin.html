@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="theme-color" content="#ff99bb">
+<title>Bucin Buat Kamu 💞</title>
+<style>
+  * {margin: 0; padding: 0; box-sizing: border-box;}
+  html, body {height: 100%; width: 100%; overflow: hidden; font-family: 'Comic Sans MS', cursive; background: #ffcce0;}
+  .slide {position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;
+    background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease; color: #fff; text-align: center; padding: 20px;}
+  .show {opacity: 1; z-index: 1;}
+  .text-box {background: rgba(255,182,193,0.8); border-radius: 20px; padding: 15px 25px; color: white; font-size: 1.5em; max-width: 85%; line-height: 1.4em;
+    box-shadow: 0 0 20px rgba(255,255,255,0.7); animation: fadeIn 1s ease;}
+  @keyframes fadeIn {from {opacity: 0; transform: scale(0.95);} to {opacity: 1; transform: scale(1);}}
+  img {width: 70%; max-width: 260px; border-radius: 20px; box-shadow: 0 0 25px rgba(255,255,255,0.9); margin-bottom: 20px;}
+  .replay-btn {position: fixed; bottom: 20px; right: 20px; background: rgba(255,150,180,0.9); color: white; font-size: 1em; padding: 10px 15px; border-radius: 25px;
+    cursor: pointer; box-shadow: 0 0 15px rgba(255,255,255,0.8); transition: all 0.3s ease; z-index: 10;}
+  .replay-btn:hover {transform: scale(1.1); background: rgba(255,100,140,1);}
+  .music-btn {position: fixed; bottom: 20px; left: 20px; background: rgba(255,182,193,0.85); border-radius: 50%; width: 50px; height: 50px; color: white;
+    font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,255,255,0.8); cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease; z-index: 10;}
+  .music-btn:hover {transform: scale(1.1) rotate(10deg); background: rgba(255,150,180,1);}
+  .music-btn.paused {background: rgba(200,200,200,0.8);}
+  .heart {position: fixed; top: -10px; color: pink; font-size: 20px; animation: fall linear forwards; opacity: 0.8; z-index: 0;}
+  @keyframes fall {0% {transform: translateY(0) rotate(0deg); opacity: 1;} 100% {transform: translateY(110vh) rotate(360deg); opacity: 0;}}
+  .closing {position: absolute; bottom: 80px; font-size: 1.3em; color: #fff; text-shadow: 0 0 10px #ff8ac9; opacity: 0; transition: opacity 2s ease;}
+  .closing.show {opacity: 1;}
+</style>
+</head>
+<body>
+<audio id="bg-music" src="Virgoun - Bukti.mp3" autoplay loop></audio>
+<div class="slide show" style="background-image: url('images (1) (1).jpeg');">
+  <div class="text-box" data-text="Halo sayangkuuuu cinta ku 🥰🥰"></div>
+</div>
+<div class="slide" style="background-image: url('images (1) (1).jpeg');">
+  <div class="text-box" data-text="Tau gak kamu 😚 aku ada sesuatu yang mau aku kasih tau 🤭🤭"></div>
+</div>
+<div class="slide" style="background-image: url('images (1) (1).jpeg');">
+  <div class="text-box" data-text="Hehehe aku ketemu orang yang paling manis dan cantik banget loh 😍💐 Mau liat ga? 😝💞"></div>
+</div>
+<div class="slide" style="background-image: url('images (1) (1).jpeg'); flex-direction: column;">
+  <img src="Screenshot_2025-10-23-08-18-06-944_com.whatsapp.jpg" alt="Sayangku">
+  <div class="text-box" data-text="Ya itu kamu syangkuuuu 🫶🫶🥰🥰"></div>
+  <div class="closing" id="closingText">Aku cinta kamu selamanya 💞 Jangan pernah pergi ya 😚💐</div>
+</div>
+<div class="replay-btn" id="replayBtn">💌 Ulang dari Awal</div>
+<div class="music-btn" id="musicBtn">🎵</div>
+<script>
+let slides = document.querySelectorAll('.slide');
+let current = 0;
+let typing = false;
+const audio = document.getElementById('bg-music');
+const musicBtn = document.getElementById('musicBtn');
+const closing = document.getElementById('closingText');
+function typeText(element, text, i = 0, callback) {
+  typing = true;
+  if (i < text.length) {
+    element.textContent += text.charAt(i);
+    setTimeout(() => typeText(element, text, i + 1, callback), 60);
+  } else {
+    typing = false;
+    if (callback) callback();
+  }
+}
+function showSlide(index) {
+  slides.forEach(slide => slide.classList.remove('show'));
+  let slide = slides[index];
+  slide.classList.add('show');
+  let textBox = slide.querySelector('.text-box');
+  textBox.textContent = "";
+  let text = textBox.getAttribute('data-text');
+  typeText(textBox, text, 0, () => {
+    if (index === slides.length - 1) setTimeout(() => closing.classList.add('show'), 1500);
+    else closing.classList.remove('show');
+  });
+}
+document.body.addEventListener('click', () => {
+  if (!typing) {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  }
+});
+document.body.addEventListener('click', () => {audio.play();}, { once: true });
+document.getElementById('replayBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  current = 0;
+  closing.classList.remove('show');
+  showSlide(current);
+});
+musicBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (audio.paused) {
+    audio.play();
+    musicBtn.classList.remove('paused');
+    musicBtn.textContent = '🎵';
+  } else {
+    audio.pause();
+    musicBtn.classList.add('paused');
+    musicBtn.textContent = '🔇';
+  }
+});
+function createHearts() {
+  setInterval(() => {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.textContent = '💖';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (15 + Math.random() * 25) + 'px';
+    heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }, 400);
+}
+window.onload = () => {
+  let firstText = slides[0].querySelector('.text-box');
+  typeText(firstText, firstText.getAttribute('data-text'));
+  createHearts();
+};
+</script>
+</body>
+</html>
